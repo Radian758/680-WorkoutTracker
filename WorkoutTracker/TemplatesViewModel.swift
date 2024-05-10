@@ -3,3 +3,8 @@
 //  WorkoutTracker
 
 import Foundation
+
+
+class TemplatesViewModel: ObservableObject {
+    init() {}
+}

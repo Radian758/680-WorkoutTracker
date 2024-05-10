@@ -7,7 +7,7 @@
 import Foundation
 
 class ProfileViewModel: ObservableObject {
-//    @Published var user: User? = nil
+    @Published var user: User? = nil
     
     init() {}
     
