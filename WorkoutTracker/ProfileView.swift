@@ -8,22 +8,22 @@ struct ProfileView: View {
     @StateObject var viewModel = ProfileViewModel()
     
     var body: some View {
-        Text("Adrian Vasquez")
-        Text("99 workouts")
+//        Text("Adrian V")
+//        Text("99 workouts")
         
-//        NavigationView {
-//            VStack {
-//                if let user = viewModel.user {
-//                    profile(user: user)
-//                } else {
-//                    Text("Loading Profile...")
-//                }
-//            }
-//            .navigationTitle("Profile")
-//        }
-//        .onAppear { // once our navigation view appears...
-//            viewModel.fetchUser()
-//        }
+        NavigationView {
+            VStack {
+                if let user = viewModel.user {
+                    profile(user: user)
+                } else {
+                    Text("Loading Profile...")
+                }
+            }
+            .navigationTitle("Profile")
+        }
+        .onAppear { // once our navigation view appears...
+            viewModel.fetchUser()
+        }
     }
     
     @ViewBuilder

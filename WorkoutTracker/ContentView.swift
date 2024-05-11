@@ -17,10 +17,6 @@ struct ContentView: View {
         } else {
             LoginView()
         }
-//        VStack {
-//            Text("ContentView")
-//        }
-//        .padding()
     }
     
     @ViewBuilder
@@ -37,7 +33,7 @@ struct ContentView: View {
                 }
             TemplatesView()
                 .tabItem {
-                    Label("Profile",
+                    Label("Workout",
                           systemImage: "figure.strengthtraining.traditional")
                 }
             
