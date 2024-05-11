@@ -4,8 +4,8 @@
 
 import Foundation
 
-struct Exercise: Codable {
-    let name: String
-    let sets: [Set]
-//    let muscleGroup: String
+struct Exercise: Codable, Identifiable {
+    var id = UUID()
+    var name: String
+    var sets: [Set]
 }

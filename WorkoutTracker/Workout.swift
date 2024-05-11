@@ -4,7 +4,8 @@
 
 import Foundation
 
-struct Workout: Codable {
+struct Workout: Codable, Identifiable {
+    var id = UUID()
     let name: String
     let date: Date
     let exercises: [Exercise]

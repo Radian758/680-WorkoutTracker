@@ -1,9 +1,6 @@
 //
 //  ContentView.swift
 //  WorkoutTracker
-//
-//  Created by Adrian Vasquez on 5/10/24.
-//
 
 import SwiftUI
 
@@ -12,7 +9,6 @@ struct ContentView: View {
     
     var body: some View {
         if viewModel.isSignedIn, !viewModel.currentUserId.isEmpty {
-            // signed in
             accountView
         } else {
             LoginView()
