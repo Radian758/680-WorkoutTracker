@@ -2,7 +2,7 @@
 //  WorkoutHistoryView.swift
 //  WorkoutTracker
 
-//import FirebaseFirestoreSwift
+import FirebaseFirestoreSwift
 import SwiftUI
 
 struct WorkoutHistoryView: View {

@@ -10,10 +10,10 @@ struct RegisterView: View {
     var body: some View {
         
         VStack {
-                Text("Register")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .padding(.bottom, 20)
+            Text("Register")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .padding(.bottom, 20)
                 
             VStack(alignment: .leading, spacing: 20) {
                     TextField("Full Name", text: $viewModel.name)

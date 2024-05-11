@@ -11,16 +11,16 @@ struct ContentView: View {
     @StateObject var viewModel = ContentViewModel()
     
     var body: some View {
-//        if viewModel.isSignedIn, !viewModel.currentUserId.isEmpty {
-//            // signed in
-//            accountView
-//        } else {
-//            LoginView()
-//        }
-        VStack {
-            Text("ContentView")
+        if viewModel.isSignedIn, !viewModel.currentUserId.isEmpty {
+            // signed in
+            accountView
+        } else {
+            LoginView()
         }
-        .padding()
+//        VStack {
+//            Text("ContentView")
+//        }
+//        .padding()
     }
     
     @ViewBuilder
