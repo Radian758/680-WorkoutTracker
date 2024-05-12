@@ -3,19 +3,23 @@
 //  WorkoutTracker
 
 import SwiftUI
+import FirebaseFirestore
 
 struct EditTemplateView: View {
     @State var workoutName: String = ""
+    // fetch exercises from db
+    // if exercises is NIL, create empty array
     @State var exercises: [Exercise] = []
-    
     @StateObject var viewModel = ContentViewModel()
+    
+    let workoutID: String // ID of the workout to fetch
     
     var body: some View {
         HStack() {
             Spacer()
             Button(action: {
-                // Go to WorkoutHistoryView
-                print("Go to WorkoutHistoryView")
+                // Go back to TemplatesView
+                print("Go to TemplatesView")
                 //                WorkoutHistoryView(userId: viewModel.currentUserId)
                 
             }, label: {
@@ -42,9 +46,20 @@ struct EditTemplateView: View {
                     ExerciseView(exercise: $exercises[index])
                 }
             }
+            .onAppear {
+                fetchWorkout()
+            }
             .padding()
         }
     }
+    
+    func fetchWorkout() {
+        print("Fetching workout...")
+//        let db = Firestore.firestore()
+//        let workoutRef = db.collection("workouts").document(workoutID)
+
+    }
+    
 }
 
 struct ExerciseView: View {
@@ -96,5 +111,5 @@ struct SetView: View {
 }
 
 #Preview {
-    EditTemplateView()
+    EditTemplateView(workoutID: "")
 }

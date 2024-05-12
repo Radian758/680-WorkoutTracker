@@ -33,7 +33,7 @@ class SampleWorkouts {
               ])
           ]
           
-          return Workout(name: "Push", date: Date(), exercises: exercises)
+          return Workout(name: "Sample Workout Template: Push", date: Date(), exercises: exercises)
       }()
     static let legs: Workout = {
         let exercises = [
@@ -59,6 +59,6 @@ class SampleWorkouts {
             ])
         ]
         
-        return Workout(name: "Legs", date: Date(), exercises: exercises)
+        return Workout(name: "Sample Workout Template: Legs", date: Date(), exercises: exercises)
     }()
 }

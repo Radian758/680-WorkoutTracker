@@ -7,22 +7,47 @@ import SwiftUI
 struct TemplateView: View {
     let workout: Workout
     
-    
     var body: some View {
-        VStack {
-            Text("Sample Workout Template: \(workout.name)")
-                .font(.title)
-                .fontWeight(.bold)
-                .padding(.bottom, 20)
-            
-            ForEach(workout.exercises) { exercise in
-                TemplateExerciseView(exercise: exercise)
-                    .padding(.vertical, 10)
+            VStack {
+                HStack {
+                    Text("\(workout.name)")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .padding(.bottom, 20)
+                    
+                    Spacer()
+                    
+//                    // Kebab menu
+//                    Menu {
+//                        Button(action: {
+//                            // Go to EditTemplateView
+//                        }) {
+//                            Label("Edit", systemImage: "pencil")
+//                        }
+//                        
+//                        Button(action: {
+//                            // Go to EditTemplateView
+//                        }) {
+//                            Label("Delete", systemImage: "trash")
+//                        }
+//                    } label: {
+//                        Image(systemName: "ellipsis")
+//                            .foregroundColor(.black)
+//                            .font(.title)
+//                            .rotationEffect(.degrees(90))
+//                    }
+//                    .padding(.trailing) // Adjust the padding as needed
+                }
+                
+                ForEach(workout.exercises) { exercise in
+                    TemplateExerciseView(exercise: exercise)
+                        .padding(.vertical, 10)
+                }
             }
+            .padding()
         }
-        .padding()
-    }
 }
+
 
 struct TemplateExerciseView: View {
     let exercise: Exercise
@@ -47,6 +72,6 @@ struct TemplateExerciseView: View {
     }
 }
 
-//#Preview {
-//    TemplateView()
-//}
+#Preview {
+    TemplateView(workout: SampleWorkouts.push)
+}
