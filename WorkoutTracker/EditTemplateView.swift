@@ -4,22 +4,31 @@
 
 import SwiftUI
 import FirebaseFirestore
+import FirebaseAuth
 
 struct EditTemplateView: View {
     @State var workoutName: String = ""
-    // fetch exercises from db
-    // if exercises is NIL, create empty array
-    @State var exercises: [Exercise] = []
-    @StateObject var viewModel = ContentViewModel()
+    @State var exercises: [Exercise] // if workout is not nil, assign it workout.exercises
+//    @StateObject var viewModel = ContentViewModel()
+    let workout: Workout? // if workout is nil, create empty workout template
+    @Binding var isEditViewPresented: Bool
     
-    let workoutID: String // ID of the workout to fetch
+    init(workout: Workout?, editViewPresented: Binding<Bool>) {
+        self.workout = workout
+        self._exercises = State(initialValue: workout?.exercises ?? [])
+        self._isEditViewPresented = editViewPresented
+    }
     
     var body: some View {
         HStack() {
             Spacer()
             Button(action: {
-                // Go back to TemplatesView
-                print("Go to TemplatesView")
+                // Save the workout template
+//                saveWorkout()
+                print("Exited EditTemplateView")
+//              Disable the fullScreenCover by setting isEditViewPresented to true
+                isEditViewPresented = false
+
                 //                WorkoutHistoryView(userId: viewModel.currentUserId)
                 
             }, label: {
@@ -46,19 +55,57 @@ struct EditTemplateView: View {
                     ExerciseView(exercise: $exercises[index])
                 }
             }
-            .onAppear {
-                fetchWorkout()
-            }
             .padding()
         }
     }
     
-    func fetchWorkout() {
-        print("Fetching workout...")
-//        let db = Firestore.firestore()
-//        let workoutRef = db.collection("workouts").document(workoutID)
+    func saveWorkout() {
+            if let currentUser = Auth.auth().currentUser {
+                let userID = currentUser.uid
+                
+                guard !workoutName.isEmpty else {
+                    print("Workout name is empty")
+                    return
+                }
+                
+                let db = Firestore.firestore()
+                var workoutData: [String: Any] = [
+                    "name": workoutName,
+                    // Convert exercises to Firestore-compatible data
+                    "exercises": exercises.map { $0.asDictionary() }
+                ]
+                
+                if let workout = workout {
+                    // Update existing workout
+                    db.collection("users")
+                        .document(userID)
+                        .collection("workouts")
+                        .document(workout.id.uuidString)
+                        .setData(workoutData) { error in
+                        if let error = error {
+                            print("Error updating workout: \(error.localizedDescription)")
+                        } else {
+                            print("Workout updated successfully")
+                        }
+                    }
+                } else {
+                    // Create new workout
+                    db.collection("users")
+                        .document(userID)
+                        .collection("workouts")
+                        .addDocument(data: workoutData) { error in
+                        if let error = error {
+                            print("Error adding workout: \(error.localizedDescription)")
+                        } else {
+                            print("Workout added successfully")
+                        }
+                    }
+                }
+            } else {
+                print("No user is currently signed in")
+            }
 
-    }
+        } // saveWorkout()
     
 }
 
@@ -111,5 +158,9 @@ struct SetView: View {
 }
 
 #Preview {
-    EditTemplateView(workoutID: "")
+    EditTemplateView(workout: nil, editViewPresented: Binding(get: {
+        return true
+    }, set: { _ in
+        
+    }))
 }

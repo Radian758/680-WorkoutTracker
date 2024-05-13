@@ -6,7 +6,9 @@ import SwiftUI
 
 struct TemplatesView: View {
     
+    // fetch all the user's workouts from db and assign to workouts property
     let workouts: [Workout] = [SampleWorkouts.push, SampleWorkouts.legs]
+    @State private var isEditViewPresented = false // State to track if the EditTemplateView is presented
     
     var body: some View {
         NavigationView {
@@ -23,14 +25,24 @@ struct TemplatesView: View {
                         HStack {
                             Text("My Templates")
                             Spacer()
-                            Button(action: {
-                                // Navigate to EditTemplateView
-                                // "" means it's a brand new workout template
-//                                EditTemplateView(workoutID: "")
-                            }) {
+//                            NavigationLink(
+//                                destination: EditTemplateView(workout: nil, editViewPresented: $isEditViewPresented),
+//                                label: {
+//                                    Image(systemName: "plus")
+//                                        .foregroundColor(.black)
+//                                }
+//                            )
+                            Button {
+                                isEditViewPresented = true
+//                                EditTemplateView(workout: nil, editViewPresented: $isEditViewPresented)
+                            } label: {
                                 Image(systemName: "plus")
                                     .foregroundColor(.black)
                             }
+                            .fullScreenCover(isPresented: $isEditViewPresented) {
+                                EditTemplateView(workout: nil, editViewPresented: $isEditViewPresented)
+                            }
+
                         }
                         .font(.title2)
                         .bold()
@@ -47,7 +59,7 @@ struct TemplatesView: View {
                                 }
                                 .contentShape(Rectangle())
                                 
-                                KebabMenu(workout: workout)
+                                KebabMenu(workout: workout, isEditViewPresented: $isEditViewPresented)
                                     .padding(.trailing)
                                     .foregroundColor(.black)
                                     .offset(y: 15)
@@ -64,6 +76,7 @@ struct TemplatesView: View {
 
 struct KebabMenu: View {
     let workout: Workout
+    @Binding var isEditViewPresented: Bool
     
     var body: some View {
         VStack {
@@ -71,14 +84,15 @@ struct KebabMenu: View {
                 Spacer()
                 Menu {
                     Button(action: {
-                        // Go to EditTemplateView
-//                        EditTemplateView(workoutID: <#T##String#>)
+                        isEditViewPresented = true // Show EditTemplateView
+                        print("Editing \(workout.name)")
                     }) {
                         Label("Edit", systemImage: "pencil")
                     }
                     
                     Button(action: {
-                        // Delete the clicked template
+                        // Implement delete action here
+                        print("Delete workout")
                     }) {
                         Label("Delete", systemImage: "trash")
                     }
@@ -90,12 +104,18 @@ struct KebabMenu: View {
                 }
                 .padding(.trailing) // Adjust the padding as needed
                 .frame(width: 40, height: 40) // Increase tap area size
+                .fullScreenCover(isPresented: $isEditViewPresented) {
+//                    NavigationView {
+                        EditTemplateView(workout: workout, editViewPresented: $isEditViewPresented)
+//                    }
+                }
             }
             Spacer()
         }
-        .padding(.top) // Add padding to move the kebab menu down slightly
+        .padding(.top) // move the kebab menu down slightly
     }
 }
+
 
 #Preview {
     TemplatesView()

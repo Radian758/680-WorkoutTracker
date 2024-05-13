@@ -16,27 +16,6 @@ struct TemplateView: View {
                         .padding(.bottom, 20)
                     
                     Spacer()
-                    
-//                    // Kebab menu
-//                    Menu {
-//                        Button(action: {
-//                            // Go to EditTemplateView
-//                        }) {
-//                            Label("Edit", systemImage: "pencil")
-//                        }
-//                        
-//                        Button(action: {
-//                            // Go to EditTemplateView
-//                        }) {
-//                            Label("Delete", systemImage: "trash")
-//                        }
-//                    } label: {
-//                        Image(systemName: "ellipsis")
-//                            .foregroundColor(.black)
-//                            .font(.title)
-//                            .rotationEffect(.degrees(90))
-//                    }
-//                    .padding(.trailing) // Adjust the padding as needed
                 }
                 
                 ForEach(workout.exercises) { exercise in
