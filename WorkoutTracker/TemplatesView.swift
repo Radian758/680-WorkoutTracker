@@ -2,14 +2,26 @@
 //  TemplatesView.swift
 //  WorkoutTracker
 
+import FirebaseFirestoreSwift
 import SwiftUI
 
 struct TemplatesView: View {
     
-    let workouts: [Workout] = [SampleWorkouts.push, SampleWorkouts.legs, SampleWorkouts.push]
+    @FirestoreQuery var workouts: [Workout]
+//    let workouts: [Workout] = [SampleWorkouts.push, SampleWorkouts.legs, SampleWorkouts.push]
     @State private var isEditViewNewWorkoutPresented = false
     @State private var isPresentingEditWorkout: Workout? = nil
     @State private var isPresentingActiveWorkout: Workout? = nil
+    
+    init(userId: String) {
+        //        // users/userID/workoutHistory/
+        //
+        //        // '_' is the convention for property wrappers
+                self._workouts = FirestoreQuery(collectionPath: "users/\(userId)/workouts/")
+        //        self._viewModel = StateObject(
+        //            wrappedValue: WorkoutHistoryViewModel(userId: userId)
+        //        )
+    }
     
     var body: some View {
         NavigationView {
@@ -25,6 +37,8 @@ struct TemplatesView: View {
                     VStack(spacing: 20) {
                         HStack {
                             Text("My Templates")
+                                .font(.title2)
+                                .bold()
                             Spacer()
                             Button {
                                 isEditViewNewWorkoutPresented = true
@@ -36,8 +50,6 @@ struct TemplatesView: View {
                                 EditTemplateView(workout: nil, editViewNewWorkoutPresented: $isEditViewNewWorkoutPresented)
                             }
                         }
-                        .font(.title2)
-                        .bold()
                         .padding()
                         
                         ForEach(workouts) { workout in
@@ -101,5 +113,5 @@ struct TemplatesView: View {
 }
 
 #Preview {
-    TemplatesView()
+    TemplatesView(userId: "RWU9NGSa9aSEaw257Um3ka3rJk22")
 }

@@ -2,49 +2,74 @@
 //  WorkoutHistoryView.swift
 //  WorkoutTracker
 
+
 import FirebaseFirestoreSwift
 import SwiftUI
 
 struct WorkoutHistoryView: View {
     
-//    @StateObject var viewModel: WorkoutHistoryViewModel
-//    @FirestoreQuery var workouts: [Workout]
-//
+    //    @StateObject var viewModel: WorkoutHistoryViewModel
+        @FirestoreQuery var workoutHistory: [Workout]
+//    var workoutHistory: [Workout] = [SampleWorkouts.push, SampleWorkouts.legs]
+    
     init(userId: String) {
-//        // users/<id>/workouts/<entries>
-//
-//        // '_' is the convention for property wrappers
-//        self._workouts = FirestoreQuery(collectionPath: "users/\(userId)/workouts/")
-//        self._viewModel = StateObject(
-//            wrappedValue: WorkoutHistoryViewModel(userId: userId)
-//        )
+        //        // users/userID/workoutHistory/
+        //
+        //        // '_' is the convention for property wrappers
+                self._workoutHistory = FirestoreQuery(collectionPath: "users/\(userId)/workoutHistory/")
+        //        self._viewModel = StateObject(
+        //            wrappedValue: WorkoutHistoryViewModel(userId: userId)
+        //        )
+        print("WorkoutHistoryView Initialized!")
     }
     
     var body: some View {
-        Text("WorkoutHistoryView")
-//        List(workouts) { workout in
-//            VStack(alignment: .leading) {
-//                Text(workout.name)
-//                    .font(.headline)
-//                Text("Date: \(workout.date, formatter: DateFormatter())")
-//                    .font(.subheadline)
-//                ForEach(workout.exercises, id: \.name) { exercise in
-//                    VStack(alignment: .leading) {
-//                        Text(exercise.name)
-//                            .font(.subheadline)
-//                        // Display sets for the exercise
-//                        ForEach(exercise.sets, id: \.self) { set in
-//                            Text("Reps: \(set.reps), Weight: \(set.weight)")
-//                                .font(.caption)
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        List {
+            Text("WorkoutHistoryView")
+            ForEach(workoutHistory) { workout in
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(workout.name)
+                        .font(.headline)
+                        .padding(.bottom, 4)
+                        .padding(.horizontal)
+                        .background(Color.secondary)
+                        .foregroundColor(.white)
+                    
+                    Text("Date: \(workout.date, formatter: DateFormatter())")
+                        .font(.subheadline)
+                        .padding(.horizontal)
+                        .foregroundColor(.gray)
+                    
+                    ForEach(workout.exercises) { exercise in
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(exercise.name)
+                                .font(.subheadline)
+                            
+                            ForEach(exercise.sets) { set in
+                                HStack {
+                                    Text("Reps: \(String(format: "%.1f", set.reps))")
+                                        .font(.caption)
+                                    Text("Weight: \(String(format: "%.1f", set.weight)) lbs")
+                                        .font(.caption)
+                                }
+                                .foregroundColor(.gray)
+                            }
+                            .padding(.horizontal)
+                        }
+                    }
+                }
+                .padding()
+                .background(Color.white)
+                .cornerRadius(10)
+                .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
+                .padding(.horizontal)
+                .padding(.vertical, 8)
+            }
+        }
     }
     
 }
 
 #Preview {
-    WorkoutHistoryView(userId: "")
+    WorkoutHistoryView(userId: "RWU9NGSa9aSEaw257Um3ka3rJk22")
 }

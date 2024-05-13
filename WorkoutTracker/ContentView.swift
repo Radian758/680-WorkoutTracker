@@ -27,7 +27,7 @@ struct ContentView: View {
                 .tabItem {
                     Label("History", systemImage: "chart.bar.xaxis")
                 }
-            TemplatesView()
+            TemplatesView(userId: viewModel.currentUserId)
                 .tabItem {
                     Label("Workout",
                           systemImage: "figure.strengthtraining.traditional")
