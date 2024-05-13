@@ -11,11 +11,13 @@ struct EditTemplateView: View {
     @State var exercises: [Exercise]// if workout is not nil, assign it workout.exercises
     //    @StateObject var viewModel = ContentViewModel()
     let workout: Workout? // if workout is nil, create empty workout template
-    @Binding var isEditViewFromPlusPresented: Bool
+    @Binding var isEditViewNewWorkoutPresented: Bool
+    @Environment(\.presentationMode) var presentationMode
     
-    init(workout: Workout?, editViewFromPlusPresented: Binding<Bool>) {
+    init(workout: Workout?, editViewNewWorkoutPresented: Binding<Bool>) {
         self.workout = workout
-        self._isEditViewFromPlusPresented = editViewFromPlusPresented
+        self._isEditViewNewWorkoutPresented = editViewNewWorkoutPresented
+        
         if let workout = workout {
             self._workoutName = State(initialValue: workout.name)
             print("workout is not nil!")
@@ -27,16 +29,15 @@ struct EditTemplateView: View {
     }
     
     var body: some View {
+        Text("Edit Template")
         HStack() {
             Spacer()
             Button(action: {
                 // Save the workout template
                 //                saveWorkout()
                 print("Exited EditTemplateView")
-                //              Disable the fullScreenCover by setting isEditViewPresented to true
-                isEditViewFromPlusPresented = false
-                
-                //                WorkoutHistoryView(userId: viewModel.currentUserId)
+                isEditViewNewWorkoutPresented = false
+                presentationMode.wrappedValue.dismiss()
                 
             }, label: {
                 Text("Finish")
@@ -117,7 +118,8 @@ struct EditTemplateView: View {
 }
 
 #Preview {
-    EditTemplateView(workout: nil, editViewFromPlusPresented: Binding(get: {
+    EditTemplateView(workout: nil,
+                     editViewNewWorkoutPresented:Binding(get: {
         return true
     }, set: { _ in
         

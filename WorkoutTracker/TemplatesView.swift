@@ -7,8 +7,9 @@ import SwiftUI
 struct TemplatesView: View {
     
     let workouts: [Workout] = [SampleWorkouts.push, SampleWorkouts.legs, SampleWorkouts.push]
-    @State private var isEditViewFromPlusPresented = false
-    @State private var isEditViewFromKebabPresented = false
+    @State private var isEditViewNewWorkoutPresented = false
+    @State private var isPresentingEditWorkout: Workout? = nil
+    @State private var isPresentingActiveWorkout: Workout? = nil
     
     var body: some View {
         NavigationView {
@@ -26,13 +27,13 @@ struct TemplatesView: View {
                             Text("My Templates")
                             Spacer()
                             Button {
-                                isEditViewFromPlusPresented = true
+                                isEditViewNewWorkoutPresented = true
                             } label: {
                                 Image(systemName: "plus")
                                     .foregroundColor(.black)
                             }
-                            .fullScreenCover(isPresented: $isEditViewFromPlusPresented) {
-                                EditTemplateView(workout: nil, editViewFromPlusPresented: $isEditViewFromPlusPresented)
+                            .fullScreenCover(isPresented: $isEditViewNewWorkoutPresented) {
+                                EditTemplateView(workout: nil, editViewNewWorkoutPresented: $isEditViewNewWorkoutPresented)
                             }
                         }
                         .font(.title2)
@@ -40,70 +41,64 @@ struct TemplatesView: View {
                         .padding()
                         
                         ForEach(workouts) { workout in
-                            ZStack {
-                                NavigationLink(destination: ActiveWorkoutView(workout: workout)) {
-                                    TemplateView(workout: workout)
-                                        .border(Color.black, width: 1)
-                                        .cornerRadius(10)
-                                        .padding()
-                                        .foregroundColor(.black)
-                                }
-                                .contentShape(Rectangle())
-                                
-                                NavigationLink(destination: EditTemplateView(workout: workout, editViewFromPlusPresented: $isEditViewFromPlusPresented)) {
-                                        KebabMenu(workout: workout)
+                            Button {
+                                isPresentingActiveWorkout = workout
+                            } label: {
+                                ZStack {
+                                        TemplateView(workout: workout)
+                                            .border(Color.black, width: 1)
+                                            .cornerRadius(10)
+                                            .padding()
+                                            .foregroundColor(.black)
+                                    VStack {
+                                        Spacer()
+                                        HStack {
+                                            Spacer()
+                                            Button(action: {
+                                                print("Delete workout")
+                                            }) {
+                                                Label("Delete", systemImage: "trash")
+                                            }
+                                            .padding(.trailing)
+                                            
+                                            Button(action: {
+                                                print("Edit workout")
+                                                isPresentingEditWorkout = workout
+                                            }) {
+                                                Label("Edit", systemImage: "pencil")
+                                            }
+                                            .padding(.trailing)
+                                            
+//                                            Button(action: {
+//                                                // Action to start the workout
+//                                            }) {
+//                                                Image(systemName: "play.circle.fill")
+//                                                    .font(.system(size: 30))
+//                                                    .foregroundColor(.green)
+//                                            }
+                                        }
+                                    }
                                 }
                             }
-                        }
-                        .fullScreenCover(isPresented: $isEditViewFromPlusPresented) {
-//                            EditTemplateView(workout: nil, editViewFromPlusPresented: $isEditViewFromPlusPresented, editViewFromKebabPresented: $isEditViewFromKebabPresented)
+
+                        } // foreach
+                        .fullScreenCover(item: $isPresentingEditWorkout) { workout in
+                            EditTemplateView(workout: workout, editViewNewWorkoutPresented: $isEditViewNewWorkoutPresented)
                         }
                     }
                     .padding()
                 }
             }
             .background(Color(UIColor.systemGroupedBackground))
-        }
-    }
-}
-
-struct KebabMenu: View {
-    let workout: Workout
-    
-    var body: some View {
-        VStack {
-            HStack {
-                Spacer()
-                Menu {
-                    Button(action: {
-                        print("Editing \(workout.name)")
-                    }) {
-                        Label("Edit", systemImage: "pencil")
-                    }
-                    
-                    Button(action: {
-                        // Implement delete action here
-                        print("Delete workout")
-                    }) {
-                        Label("Delete", systemImage: "trash")
-                    }
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .foregroundColor(.black)
-                        .font(.title)
-                        .rotationEffect(.degrees(90))
-                }
-                .padding(.trailing) // Adjust the padding as needed
-                .frame(width: 40, height: 40) // Increase tap area size
+            .fullScreenCover(item: $isPresentingActiveWorkout) { workout in
+                ActiveWorkoutView(workout: workout)
             }
-            Spacer()
+//            .onDisappear {
+//
+//            }
         }
-        .padding(.top) // move the kebab menu down slightly
     }
 }
-
-
-
 
 #Preview {
     TemplatesView()
