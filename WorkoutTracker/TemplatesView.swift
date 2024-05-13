@@ -6,9 +6,9 @@ import SwiftUI
 
 struct TemplatesView: View {
     
-    // fetch all the user's workouts from db and assign to workouts property
-    let workouts: [Workout] = [SampleWorkouts.push, SampleWorkouts.legs]
-    @State private var isEditViewPresented = false // State to track if the EditTemplateView is presented
+    let workouts: [Workout] = [SampleWorkouts.push, SampleWorkouts.legs, SampleWorkouts.push]
+    @State private var isEditViewFromPlusPresented = false
+    @State private var isEditViewFromKebabPresented = false
     
     var body: some View {
         NavigationView {
@@ -17,32 +17,23 @@ struct TemplatesView: View {
                     .font(.largeTitle)
                     .bold()
                     .padding(.leading)
-                .padding()
-                .font(.title2)
-                .fontWeight(.bold)
+                    .padding()
+                    .font(.title2)
+                    .fontWeight(.bold)
                 ScrollView {
                     VStack(spacing: 20) {
                         HStack {
                             Text("My Templates")
                             Spacer()
-//                            NavigationLink(
-//                                destination: EditTemplateView(workout: nil, editViewPresented: $isEditViewPresented),
-//                                label: {
-//                                    Image(systemName: "plus")
-//                                        .foregroundColor(.black)
-//                                }
-//                            )
                             Button {
-                                isEditViewPresented = true
-//                                EditTemplateView(workout: nil, editViewPresented: $isEditViewPresented)
+                                isEditViewFromPlusPresented = true
                             } label: {
                                 Image(systemName: "plus")
                                     .foregroundColor(.black)
                             }
-                            .fullScreenCover(isPresented: $isEditViewPresented) {
-                                EditTemplateView(workout: nil, editViewPresented: $isEditViewPresented)
+                            .fullScreenCover(isPresented: $isEditViewFromPlusPresented) {
+                                EditTemplateView(workout: nil, editViewFromPlusPresented: $isEditViewFromPlusPresented, editViewFromKebabPresented: $isEditViewFromKebabPresented)
                             }
-
                         }
                         .font(.title2)
                         .bold()
@@ -59,24 +50,26 @@ struct TemplatesView: View {
                                 }
                                 .contentShape(Rectangle())
                                 
-                                KebabMenu(workout: workout, isEditViewPresented: $isEditViewPresented)
-                                    .padding(.trailing)
-                                    .foregroundColor(.black)
-                                    .offset(y: 15)
+                                if !isEditViewFromPlusPresented { // Check if already presented from "plus" button
+                                    KebabMenu(workout: workout, isEditViewFromKebabPresented: $isEditViewFromKebabPresented)
+                                        .padding(.trailing)
+                                        .foregroundColor(.black)
+                                        .offset(y: 15)
+                                }
                             }
-                        } // foreach
+                        }
                     }
                     .padding()
-                } // ScrollView
-            } // VStack
+                }
+            }
             .background(Color(UIColor.systemGroupedBackground))
-        } // navigationview
-    } // body
+        }
+    }
 }
 
 struct KebabMenu: View {
     let workout: Workout
-    @Binding var isEditViewPresented: Bool
+    @Binding var isEditViewFromKebabPresented: Bool
     
     var body: some View {
         VStack {
@@ -84,7 +77,7 @@ struct KebabMenu: View {
                 Spacer()
                 Menu {
                     Button(action: {
-                        isEditViewPresented = true // Show EditTemplateView
+                        isEditViewFromKebabPresented = true
                         print("Editing \(workout.name)")
                     }) {
                         Label("Edit", systemImage: "pencil")
@@ -104,10 +97,8 @@ struct KebabMenu: View {
                 }
                 .padding(.trailing) // Adjust the padding as needed
                 .frame(width: 40, height: 40) // Increase tap area size
-                .fullScreenCover(isPresented: $isEditViewPresented) {
-//                    NavigationView {
-                        EditTemplateView(workout: workout, editViewPresented: $isEditViewPresented)
-//                    }
+                .fullScreenCover(isPresented: $isEditViewFromKebabPresented) {
+                    EditTemplateView(workout: workout, editViewFromPlusPresented: .constant(false), editViewFromKebabPresented: $isEditViewFromKebabPresented)
                 }
             }
             Spacer()
@@ -115,6 +106,8 @@ struct KebabMenu: View {
         .padding(.top) // move the kebab menu down slightly
     }
 }
+
+
 
 
 #Preview {

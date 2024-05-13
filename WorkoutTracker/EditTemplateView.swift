@@ -8,15 +8,23 @@ import FirebaseAuth
 
 struct EditTemplateView: View {
     @State var workoutName: String = ""
-    @State var exercises: [Exercise] // if workout is not nil, assign it workout.exercises
+    @State var exercises: [Exercise]// if workout is not nil, assign it workout.exercises
 //    @StateObject var viewModel = ContentViewModel()
     let workout: Workout? // if workout is nil, create empty workout template
-    @Binding var isEditViewPresented: Bool
+    @Binding var isEditViewFromPlusPresented: Bool
+    @Binding var isEditViewFromKebabPresented: Bool
     
-    init(workout: Workout?, editViewPresented: Binding<Bool>) {
+    init(workout: Workout?, editViewFromPlusPresented: Binding<Bool>, editViewFromKebabPresented: Binding<Bool>) {
         self.workout = workout
+        self._isEditViewFromPlusPresented = editViewFromPlusPresented
+        self._isEditViewFromKebabPresented = editViewFromKebabPresented
+        if let workout = workout {
+            print("workout is not nil!")
+        } else {
+            print("workout is nil: \(workout)")
+        }
         self._exercises = State(initialValue: workout?.exercises ?? [])
-        self._isEditViewPresented = editViewPresented
+        print("EditTemplateView initialized")
     }
     
     var body: some View {
@@ -27,7 +35,9 @@ struct EditTemplateView: View {
 //                saveWorkout()
                 print("Exited EditTemplateView")
 //              Disable the fullScreenCover by setting isEditViewPresented to true
-                isEditViewPresented = false
+//                isEditViewPresented = false
+                isEditViewFromPlusPresented = false
+                isEditViewFromKebabPresented = false
 
                 //                WorkoutHistoryView(userId: viewModel.currentUserId)
                 
@@ -55,6 +65,15 @@ struct EditTemplateView: View {
                     ExerciseView(exercise: $exercises[index])
                 }
             }
+//            .onAppear {
+//                 // Ensure workout and its exercises are not nil
+//                 if let workout = workout {
+//                     print("workout is not nil!")
+//                     exercises = workout.exercises
+//                 } else {
+//                     print("workout is nil: \(workout)")
+//                 }
+//             }
             .padding()
         }
     }
@@ -109,58 +128,10 @@ struct EditTemplateView: View {
     
 }
 
-struct ExerciseView: View {
-    @Binding var exercise: Exercise
-    
-    var body: some View {
-        VStack {
-            TextField("Exercise Name", text: $exercise.name)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
-            // Add Set button
-            Button(action: {
-                exercise.sets.append(Set(reps: 0, weight: 0))
-            }) {
-                Text("Add Set")
-            }
-            
-            // Display existing sets
-            ForEach(exercise.sets.indices, id: \.self) { setIndex in
-                SetView(set: $exercise.sets[setIndex])
-            }
-        }
-        .padding()
-        .background(Color.gray.opacity(0.1))
-        .cornerRadius(10)
-        .padding(.vertical, 5)
-    }
-}
-
-struct SetView: View {
-    @Binding var set: Set
-    
-    var body: some View {
-        HStack {
-            Text("Weight:")
-            TextField("Weight", value: $set.weight, formatter: NumberFormatter())
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-                .keyboardType(.decimalPad)
-            
-            Text("Reps:")
-            TextField("Reps", value: $set.reps, formatter: NumberFormatter())
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-                .keyboardType(.numberPad)
-        }
-    }
-}
-
-#Preview {
-    EditTemplateView(workout: nil, editViewPresented: Binding(get: {
-        return true
-    }, set: { _ in
-        
-    }))
-}
+//#Preview {
+//    EditTemplateView(workout: nil, editViewPresented: Binding(get: {
+//        return true
+//    }, set: { _ in
+//        
+//    }))
+//}
