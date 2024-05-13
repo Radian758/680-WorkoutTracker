@@ -32,7 +32,7 @@ struct TemplatesView: View {
                                     .foregroundColor(.black)
                             }
                             .fullScreenCover(isPresented: $isEditViewFromPlusPresented) {
-                                EditTemplateView(workout: nil, editViewFromPlusPresented: $isEditViewFromPlusPresented, editViewFromKebabPresented: $isEditViewFromKebabPresented)
+                                EditTemplateView(workout: nil, editViewFromPlusPresented: $isEditViewFromPlusPresented)
                             }
                         }
                         .font(.title2)
@@ -50,13 +50,13 @@ struct TemplatesView: View {
                                 }
                                 .contentShape(Rectangle())
                                 
-                                if !isEditViewFromPlusPresented { // Check if already presented from "plus" button
-                                    KebabMenu(workout: workout, isEditViewFromKebabPresented: $isEditViewFromKebabPresented)
-                                        .padding(.trailing)
-                                        .foregroundColor(.black)
-                                        .offset(y: 15)
+                                NavigationLink(destination: EditTemplateView(workout: workout, editViewFromPlusPresented: $isEditViewFromPlusPresented)) {
+                                        KebabMenu(workout: workout)
                                 }
                             }
+                        }
+                        .fullScreenCover(isPresented: $isEditViewFromPlusPresented) {
+//                            EditTemplateView(workout: nil, editViewFromPlusPresented: $isEditViewFromPlusPresented, editViewFromKebabPresented: $isEditViewFromKebabPresented)
                         }
                     }
                     .padding()
@@ -69,7 +69,6 @@ struct TemplatesView: View {
 
 struct KebabMenu: View {
     let workout: Workout
-    @Binding var isEditViewFromKebabPresented: Bool
     
     var body: some View {
         VStack {
@@ -77,7 +76,6 @@ struct KebabMenu: View {
                 Spacer()
                 Menu {
                     Button(action: {
-                        isEditViewFromKebabPresented = true
                         print("Editing \(workout.name)")
                     }) {
                         Label("Edit", systemImage: "pencil")
@@ -97,9 +95,6 @@ struct KebabMenu: View {
                 }
                 .padding(.trailing) // Adjust the padding as needed
                 .frame(width: 40, height: 40) // Increase tap area size
-                .fullScreenCover(isPresented: $isEditViewFromKebabPresented) {
-                    EditTemplateView(workout: workout, editViewFromPlusPresented: .constant(false), editViewFromKebabPresented: $isEditViewFromKebabPresented)
-                }
             }
             Spacer()
         }

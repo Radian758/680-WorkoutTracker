@@ -12,12 +12,10 @@ struct EditTemplateView: View {
 //    @StateObject var viewModel = ContentViewModel()
     let workout: Workout? // if workout is nil, create empty workout template
     @Binding var isEditViewFromPlusPresented: Bool
-    @Binding var isEditViewFromKebabPresented: Bool
     
-    init(workout: Workout?, editViewFromPlusPresented: Binding<Bool>, editViewFromKebabPresented: Binding<Bool>) {
+    init(workout: Workout?, editViewFromPlusPresented: Binding<Bool>) {
         self.workout = workout
         self._isEditViewFromPlusPresented = editViewFromPlusPresented
-        self._isEditViewFromKebabPresented = editViewFromKebabPresented
         if let workout = workout {
             print("workout is not nil!")
         } else {
@@ -35,9 +33,7 @@ struct EditTemplateView: View {
 //                saveWorkout()
                 print("Exited EditTemplateView")
 //              Disable the fullScreenCover by setting isEditViewPresented to true
-//                isEditViewPresented = false
                 isEditViewFromPlusPresented = false
-                isEditViewFromKebabPresented = false
 
                 //                WorkoutHistoryView(userId: viewModel.currentUserId)
                 
