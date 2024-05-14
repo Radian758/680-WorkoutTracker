@@ -28,7 +28,7 @@ struct ActiveWorkoutView: View {
             Spacer()
             Button(action: {
                 // Save the workout to workoutHistory
-//                saveWorkoutToHistory(workout: workout)
+                saveWorkoutToHistory(workout: workout)
                 print("Exited ActiveWorkoutView")
                 // Go to WorkoutHistoryView
                 // WorkoutHistoryView(userId: viewModel.currentUserId)
@@ -68,16 +68,17 @@ struct ActiveWorkoutView: View {
             let workoutHistoryRef = db.collection("users").document(userID).collection("workoutHistory")
             
             let workoutEntry = Workout(
-                name: workout.name,
+                id: UUID().uuidString,
+                name: workoutName,
                 date: Date(),
-                exercises: workout.exercises
+                exercises: exercises
             )
             
             do {
                 _ = try workoutHistoryRef.addDocument(from: workoutEntry)
                 print("Workout saved to history successfully")
             } catch {
-                print("Error saving workout to history: \(error.localizedDescription)")
+                print("Error saving workout to history: \(error)")
             }
         } else {
             print("No user is currently signed in")

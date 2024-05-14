@@ -9,7 +9,6 @@ import FirebaseAuth
 struct EditTemplateView: View {
     @State var workoutName: String = ""
     @State var exercises: [Exercise]// if workout is not nil, assign it workout.exercises
-    //    @StateObject var viewModel = ContentViewModel()
     let workout: Workout? // if workout is nil, create empty workout template
     @Binding var isEditViewNewWorkoutPresented: Bool
     @Environment(\.presentationMode) var presentationMode
@@ -34,7 +33,7 @@ struct EditTemplateView: View {
             Spacer()
             Button(action: {
                 // Save the workout template
-                //                saveWorkout()
+                saveWorkout()
                 print("Exited EditTemplateView")
                 isEditViewNewWorkoutPresented = false
                 presentationMode.wrappedValue.dismiss()
@@ -78,7 +77,9 @@ struct EditTemplateView: View {
             
             let db = Firestore.firestore()
             var workoutData: [String: Any] = [
+                "id": UUID().uuidString,
                 "name": workoutName,
+                "date": Date(),
                 // Convert exercises to Firestore-compatible data
                 "exercises": exercises.map { $0.asDictionary() }
             ]
@@ -87,8 +88,8 @@ struct EditTemplateView: View {
                 // Update existing workout
                 db.collection("users")
                     .document(userID)
-                    .collection("workouts")
-                    .document(workout.id.uuidString)
+                    .collection("workoutTemplates")
+                    .document(workout.id)
                     .setData(workoutData) { error in
                         if let error = error {
                             print("Error updating workout: \(error.localizedDescription)")
@@ -100,7 +101,7 @@ struct EditTemplateView: View {
                 // Create new workout
                 db.collection("users")
                     .document(userID)
-                    .collection("workouts")
+                    .collection("workoutTemplates")
                     .addDocument(data: workoutData) { error in
                         if let error = error {
                             print("Error adding workout: \(error.localizedDescription)")
