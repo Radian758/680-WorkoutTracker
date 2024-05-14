@@ -2,22 +2,22 @@
 //  ActiveWorkoutView.swift
 //  WorkoutTracker
 
-import FirebaseFirestore
-import FirebaseAuth
+//import FirebaseFirestore
+//import FirebaseAuth
 import SwiftUI
 
 struct ActiveWorkoutView: View {
-    @State var workoutName: String = ""
-    @State var exercises: [Exercise]// if workout is not nil, assign it workout.exercises
-    //    @StateObject var viewModel = ContentViewModel()
+    @StateObject var viewModel: ActiveWorkoutViewModel
     let workout: Workout // temporary for ui building purpose
     @Environment(\.presentationMode) var presentationMode
     
     init(workout: Workout) {
         self.workout = workout
-        self._exercises = State(initialValue: workout.exercises)
-        self._workoutName = State(initialValue: workout.name)
-        
+//        self._exercises = State(initialValue: workout.exercises)
+//        self._workoutName = State(initialValue: workout.name)
+        self._viewModel = StateObject(
+            wrappedValue: ActiveWorkoutViewModel(workout: workout)
+        )
         print("ActiveWorkoutView initialized")
     }
     
@@ -28,7 +28,7 @@ struct ActiveWorkoutView: View {
             Spacer()
             Button(action: {
                 // Save the workout to workoutHistory
-                saveWorkoutToHistory(workout: workout)
+                viewModel.saveWorkoutToHistory(workout: workout)
                 print("Exited ActiveWorkoutView")
                 // Go to WorkoutHistoryView
                 // WorkoutHistoryView(userId: viewModel.currentUserId)
@@ -41,49 +41,27 @@ struct ActiveWorkoutView: View {
         
         ScrollView {
             VStack {
-                TextField("Workout Template Name", text: $workoutName)
+                TextField("Workout Template Name", text: $viewModel.workoutName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
                 
                 // Add Exercise button
                 Button(action: {
-                    exercises.append(Exercise(name: "", sets: []))
+                    viewModel.exercises.append(Exercise(name: "", sets: []))
                 }) {
                     Text("Add Exercise")
                 }
                 
                 // Display existing exercises
-                ForEach(exercises.indices, id: \.self) { index in
-                    ExerciseView(exercise: $exercises[index])
+                ForEach(viewModel.exercises.indices, id: \.self) { index in
+                    ExerciseView(exercise: $viewModel.exercises[index])
                 }
             }
             .padding()
         }
     }
     
-    func saveWorkoutToHistory(workout: Workout) {
-        if let currentUser = Auth.auth().currentUser {
-            let userID = currentUser.uid
-            let db = Firestore.firestore()
-            let workoutHistoryRef = db.collection("users").document(userID).collection("workoutHistory")
-            
-            let workoutEntry = Workout(
-                id: UUID().uuidString,
-                name: workoutName,
-                date: Date(),
-                exercises: exercises
-            )
-            
-            do {
-                _ = try workoutHistoryRef.addDocument(from: workoutEntry)
-                print("Workout saved to history successfully")
-            } catch {
-                print("Error saving workout to history: \(error)")
-            }
-        } else {
-            print("No user is currently signed in")
-        }
-    }
+
     
 }
 

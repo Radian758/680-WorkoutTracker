@@ -85,15 +85,16 @@ struct EditTemplateView: View {
             
             if let workout = workout {
                 // Update existing workout
+                workoutData["id"] = workout.id
                 db.collection("users")
                     .document(userID)
                     .collection("workoutTemplates")
                     .document(workout.id) // Use workout ID as document ID
                     .setData(workoutData) { error in
                         if let error = error {
-                            print("Error updating workout: \(error.localizedDescription)")
+                            print("Error updating workout: \(error)")
                         } else {
-                            print("Workout updated successfully")
+                            print("Existing Workout updated successfully")
                         }
                     }
             } else {
@@ -108,9 +109,9 @@ struct EditTemplateView: View {
                     .document(newWorkoutID) // Use the same ID for the document
                     .setData(workoutData) { error in
                         if let error = error {
-                            print("Error adding workout: \(error.localizedDescription)")
+                            print("Error adding workout: \(error)")
                         } else {
-                            print("Workout added successfully")
+                            print("New Workout added successfully")
                         }
                     }
             }

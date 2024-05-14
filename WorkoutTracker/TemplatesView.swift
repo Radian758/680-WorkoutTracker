@@ -8,18 +8,22 @@ import SwiftUI
 
 struct TemplatesView: View {
     
-    @FirestoreQuery var workoutTemplates: [Workout]
+    @StateObject var viewModel: TemplatesViewModel
+//    @State var workoutTemplates: [Workout] = []
 //        let workoutTemplates: [Workout] = [SampleWorkouts.push, SampleWorkouts.legs, SampleWorkouts.push]
-    @State private var isEditViewNewWorkoutPresented = false
-    @State private var isPresentingEditWorkout: Workout? = nil
-    @State private var isPresentingActiveWorkout: Workout? = nil
+//    @State private var isEditViewNewWorkoutPresented = false
+//    @State private var isPresentingEditWorkout: Workout? = nil
+//    @State private var isPresentingActiveWorkout: Workout? = nil
     let userId: String
     
     init(userId: String) {
         print("IN INIT TEMPLATESVIEW")
         self.userId = userId
-        let firestorePath = "/users/\(userId)/workoutTemplates/"
-        self._workoutTemplates = FirestoreQuery(collectionPath: firestorePath)
+//        let firestorePath = "/users/\(userId)/workoutTemplates/"
+//        self._workoutTemplates = FirestoreQuery(collectionPath: firestorePath)
+        self._viewModel = StateObject(
+            wrappedValue: TemplatesViewModel(userId: userId)
+        )
     }
     
     var body: some View {
@@ -40,20 +44,20 @@ struct TemplatesView: View {
                                 .bold()
                             Spacer()
                             Button {
-                                isEditViewNewWorkoutPresented = true
+                                viewModel.isEditViewNewWorkoutPresented = true
                             } label: {
                                 Image(systemName: "plus")
                                     .foregroundColor(.black)
                             }
-                            .fullScreenCover(isPresented: $isEditViewNewWorkoutPresented) {
-                                EditTemplateView(workout: nil, editViewNewWorkoutPresented: $isEditViewNewWorkoutPresented)
+                            .fullScreenCover(isPresented: $viewModel.isEditViewNewWorkoutPresented) {
+                                EditTemplateView(workout: nil, editViewNewWorkoutPresented: $viewModel.isEditViewNewWorkoutPresented)
                             }
                         }
                         .padding()
                         
-                        ForEach(workoutTemplates) { workout in
+                        ForEach(viewModel.workoutTemplates) { workout in
                             Button {
-                                isPresentingActiveWorkout = workout
+                                viewModel.isPresentingActiveWorkout = workout
                                 print(workout)
                             } label: {
                                 ZStack {
@@ -68,7 +72,7 @@ struct TemplatesView: View {
                                             Spacer()
                                             Button(action: {
                                                 print("Delete workout")
-                                                deleteWorkout(workout)
+                                                viewModel.deleteWorkout(workout)
                                             }) {
                                                 Label("Delete", systemImage: "trash")
                                             }
@@ -76,82 +80,34 @@ struct TemplatesView: View {
                                             
                                             Button(action: {
                                                 print("Edit workout")
-                                                isPresentingEditWorkout = workout
+                                                viewModel.isPresentingEditWorkout = workout
                                             }) {
                                                 Label("Edit", systemImage: "pencil")
                                             }
                                             .padding(.trailing)
-                                            
-                                            //                                            Button(action: {
-                                            //                                                // Action to start the workout
-                                            //                                            }) {
-                                            //                                                Image(systemName: "play.circle.fill")
-                                            //                                                    .font(.system(size: 30))
-                                            //                                                    .foregroundColor(.green)
-                                            //                                            }
                                         }
                                     }
                                 }
                             }
                             
                         } // foreach
-                        .fullScreenCover(item: $isPresentingEditWorkout) { workout in
-                            EditTemplateView(workout: workout, editViewNewWorkoutPresented: $isEditViewNewWorkoutPresented)
+                        .fullScreenCover(item: $viewModel.isPresentingEditWorkout) { workout in
+                            EditTemplateView(workout: workout, editViewNewWorkoutPresented: $viewModel.isEditViewNewWorkoutPresented)
                         }
                     }
                     .padding()
                 }
             }
             .background(Color(UIColor.systemGroupedBackground))
-            .fullScreenCover(item: $isPresentingActiveWorkout) { workout in
+            .fullScreenCover(item: $viewModel.isPresentingActiveWorkout) { workout in
                 ActiveWorkoutView(workout: workout)
             }
         }
-//        .onAppear {
-//            fetchWorkoutTemplates()
-//        }
-    }
-    
-//    private func fetchWorkoutTemplates() {
-//            let db = Firestore.firestore()
-//            db.collection("users/\(userId)/workoutTemplates").getDocuments { querySnapshot, error in
-//                if let error = error {
-//                    print("Error fetching workout templates: \(error.localizedDescription)")
-//                    return
-//                }
-//                
-//                guard let documents = querySnapshot?.documents else {
-//                    print("No documents found")
-//                    return
-//                }
-//                
-//                self.workoutTemplates = documents.compactMap { document in
-//                    do {
-//                        let workout = try document.data(as: Workout.self)
-//                        return workout
-//                    } catch {
-//                        print("Error decoding workout: \(error)")
-//                        return nil
-//                    }
-//                }
-//            }
-//        }
-    
-    
-    private func deleteWorkout(_ workout: Workout) {
-        // Remove the workout from Firestore
-        print(workout.id)
-        Firestore.firestore().collection("users/\(userId)/workoutTemplates").document(workout.id).delete { error in
-            if let error = error {
-                print("Error deleting workout: \(error.localizedDescription)")
-            } else {
-                print("Workout deleted successfully")
-                // After successfully deleting the workout from Firestore, you may want to refresh the workoutTemplates array
-                // Since it's derived from FirestoreQuery, it should update automatically, but you can also manually refresh it if needed
-                // This depends on how you've implemented FirestoreQuery
-            }
+        .onAppear {
+            viewModel.fetchWorkoutTemplates()
         }
     }
+
 }
 
 #Preview {
