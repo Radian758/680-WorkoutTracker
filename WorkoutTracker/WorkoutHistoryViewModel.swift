@@ -8,6 +8,13 @@ import Foundation
 class WorkoutHistoryViewModel: ObservableObject {
     private let userId: String
     
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter
+    }()
+    
     init(userId: String) {
         self.userId = userId
     }

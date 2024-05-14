@@ -8,18 +8,18 @@ import SwiftUI
 
 struct WorkoutHistoryView: View {
     
-        @StateObject var viewModel: WorkoutHistoryViewModel
-        @FirestoreQuery var workoutHistory: [Workout]
-//    var workoutHistory: [Workout] = [SampleWorkouts.push, SampleWorkouts.legs]
+    @StateObject var viewModel: WorkoutHistoryViewModel
+    @FirestoreQuery var workoutHistory: [Workout]
+    //    var workoutHistory: [Workout] = [SampleWorkouts.push, SampleWorkouts.legs]
     
     init(userId: String) {
-        //        // users/userID/workoutHistory/
-        //
-        //        // '_' is the convention for property wrappers
-                self._workoutHistory = FirestoreQuery(collectionPath: "users/\(userId)/workoutHistory/")
-                self._viewModel = StateObject(
-                    wrappedValue: WorkoutHistoryViewModel(userId: userId)
-                )
+        self._workoutHistory = FirestoreQuery(
+            collectionPath: "users/\(userId)/workoutHistory/",
+            predicates: [.orderBy("date", true)]
+        )
+        self._viewModel = StateObject(
+            wrappedValue: WorkoutHistoryViewModel(userId: userId)
+        )
         print("WorkoutHistoryView Initialized!")
     }
     
@@ -35,7 +35,7 @@ struct WorkoutHistoryView: View {
                         .background(Color.secondary)
                         .foregroundColor(.white)
                     
-                    Text("Date: \(workout.date, formatter: DateFormatter())")
+                    Text("Date: \(workout.date, formatter: viewModel.dateFormatter)")
                         .font(.subheadline)
                         .padding(.horizontal)
                         .foregroundColor(.gray)
