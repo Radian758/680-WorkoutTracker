@@ -47,7 +47,7 @@ struct WorkoutHistoryView: View {
                             
                             ForEach(exercise.sets) { set in
                                 HStack {
-                                    Text("Reps: \(String(format: "%.1f", set.reps))")
+                                    Text("Reps: \(set.reps)")
                                         .font(.caption)
                                     Text("Weight: \(String(format: "%.1f", set.weight)) lbs")
                                         .font(.caption)
