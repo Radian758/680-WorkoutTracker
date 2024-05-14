@@ -140,6 +140,7 @@ struct TemplatesView: View {
     
     private func deleteWorkout(_ workout: Workout) {
         // Remove the workout from Firestore
+        print(workout.id)
         Firestore.firestore().collection("users/\(userId)/workoutTemplates").document(workout.id).delete { error in
             if let error = error {
                 print("Error deleting workout: \(error.localizedDescription)")

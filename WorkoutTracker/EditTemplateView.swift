@@ -77,7 +77,6 @@ struct EditTemplateView: View {
             
             let db = Firestore.firestore()
             var workoutData: [String: Any] = [
-                "id": UUID().uuidString,
                 "name": workoutName,
                 "date": Date(),
                 // Convert exercises to Firestore-compatible data
@@ -89,7 +88,7 @@ struct EditTemplateView: View {
                 db.collection("users")
                     .document(userID)
                     .collection("workoutTemplates")
-                    .document(workout.id)
+                    .document(workout.id) // Use workout ID as document ID
                     .setData(workoutData) { error in
                         if let error = error {
                             print("Error updating workout: \(error.localizedDescription)")
@@ -98,11 +97,16 @@ struct EditTemplateView: View {
                         }
                     }
             } else {
-                // Create new workout
+                // Create new workout with the workout ID matching the document ID
+                let newWorkoutID = UUID().uuidString
+                workoutData["id"] = newWorkoutID
+                print("Creating new workout with ID: \(newWorkoutID)")
+                
                 db.collection("users")
                     .document(userID)
                     .collection("workoutTemplates")
-                    .addDocument(data: workoutData) { error in
+                    .document(newWorkoutID) // Use the same ID for the document
+                    .setData(workoutData) { error in
                         if let error = error {
                             print("Error adding workout: \(error.localizedDescription)")
                         } else {
@@ -113,8 +117,8 @@ struct EditTemplateView: View {
         } else {
             print("No user is currently signed in")
         }
-        
-    } // saveWorkout()
+    }
+ // save workout()
     
 }
 
