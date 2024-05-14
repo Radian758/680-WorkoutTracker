@@ -8,7 +8,7 @@ import SwiftUI
 
 struct WorkoutHistoryView: View {
     
-    //    @StateObject var viewModel: WorkoutHistoryViewModel
+        @StateObject var viewModel: WorkoutHistoryViewModel
         @FirestoreQuery var workoutHistory: [Workout]
 //    var workoutHistory: [Workout] = [SampleWorkouts.push, SampleWorkouts.legs]
     
@@ -17,9 +17,9 @@ struct WorkoutHistoryView: View {
         //
         //        // '_' is the convention for property wrappers
                 self._workoutHistory = FirestoreQuery(collectionPath: "users/\(userId)/workoutHistory/")
-        //        self._viewModel = StateObject(
-        //            wrappedValue: WorkoutHistoryViewModel(userId: userId)
-        //        )
+                self._viewModel = StateObject(
+                    wrappedValue: WorkoutHistoryViewModel(userId: userId)
+                )
         print("WorkoutHistoryView Initialized!")
     }
     
@@ -64,6 +64,13 @@ struct WorkoutHistoryView: View {
                 .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
                 .padding(.horizontal)
                 .padding(.vertical, 8)
+                .swipeActions {
+                    Button("Delete") {
+                        print("Deleting workout with ID: \(workout.id)")
+                        viewModel.delete(id: workout.id)
+                    }
+                    .tint(.red)
+                }
             }
         }
     }

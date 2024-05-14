@@ -11,9 +11,6 @@ struct TemplatesView: View {
     @StateObject var viewModel: TemplatesViewModel
 //    @State var workoutTemplates: [Workout] = []
 //        let workoutTemplates: [Workout] = [SampleWorkouts.push, SampleWorkouts.legs, SampleWorkouts.push]
-//    @State private var isEditViewNewWorkoutPresented = false
-//    @State private var isPresentingEditWorkout: Workout? = nil
-//    @State private var isPresentingActiveWorkout: Workout? = nil
     let userId: String
     
     init(userId: String) {

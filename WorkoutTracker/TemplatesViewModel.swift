@@ -54,12 +54,9 @@ class TemplatesViewModel: ObservableObject {
         print(workout.id)
         Firestore.firestore().collection("users/\(userId)/workoutTemplates").document(workout.id).delete { error in
             if let error = error {
-                print("Error deleting workout: \(error.localizedDescription)")
+                print("Error deleting workout: \(error)")
             } else {
                 print("Workout deleted successfully")
-                // After successfully deleting the workout from Firestore, you may want to refresh the workoutTemplates array
-                // Since it's derived from FirestoreQuery, it should update automatically, but you can also manually refresh it if needed
-                // This depends on how you've implemented FirestoreQuery
             }
         }
     }

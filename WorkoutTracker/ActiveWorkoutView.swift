@@ -2,8 +2,6 @@
 //  ActiveWorkoutView.swift
 //  WorkoutTracker
 
-//import FirebaseFirestore
-//import FirebaseAuth
 import SwiftUI
 
 struct ActiveWorkoutView: View {
@@ -13,8 +11,6 @@ struct ActiveWorkoutView: View {
     
     init(workout: Workout) {
         self.workout = workout
-//        self._exercises = State(initialValue: workout.exercises)
-//        self._workoutName = State(initialValue: workout.name)
         self._viewModel = StateObject(
             wrappedValue: ActiveWorkoutViewModel(workout: workout)
         )
@@ -45,14 +41,12 @@ struct ActiveWorkoutView: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
                 
-                // Add Exercise button
                 Button(action: {
                     viewModel.exercises.append(Exercise(name: "", sets: []))
                 }) {
                     Text("Add Exercise")
                 }
                 
-                // Display existing exercises
                 ForEach(viewModel.exercises.indices, id: \.self) { index in
                     ExerciseView(exercise: $viewModel.exercises[index])
                 }
