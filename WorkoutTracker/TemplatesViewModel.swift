@@ -17,9 +17,12 @@ class TemplatesViewModel: ObservableObject {
         self.userId = userId
     }
     
+    
+//    func FetchWorkoutTemplates
+    
     func fetchWorkoutTemplates() {
         let db = Firestore.firestore()
-        db.collection("users/\(userId)/workoutTemplates").getDocuments { querySnapshot, error in
+        db.collection("users/\(userId)/workoutTemplates").order(by: "date", descending: true).addSnapshotListener { querySnapshot, error in
             if let error = error {
                 print("Error fetching workout templates: \(error.localizedDescription)")
                 return
@@ -31,20 +34,21 @@ class TemplatesViewModel: ObservableObject {
             }
             
             // Clear existing workout templates
-            self.workoutTemplates.removeAll()
-            
-            // Append fetched workout templates
-            for document in documents {
-                do {
-                    let workout = try document.data(as: Workout.self)
-                    print(workout)
-                    self.workoutTemplates.append(workout)
-                } catch {
-                    print("Error decoding workout: \(error)")
+            DispatchQueue.main.async {
+                self.workoutTemplates = []
+                self.workoutTemplates = documents.compactMap { document in
+                    do {
+                        return try document.data(as: Workout.self)
+                    } catch {
+                        print("Error decoding workout: \(error)")
+                        return nil
+                    }
                 }
             }
+            print(self.workoutTemplates)
         }
     }
+
     
     
     

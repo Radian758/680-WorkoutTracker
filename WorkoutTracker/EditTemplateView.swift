@@ -66,6 +66,23 @@ struct EditTemplateView: View {
         }
     }
     
+    func deleteWorkout(_ workout: Workout) {
+        
+        if let currentUser = Auth.auth().currentUser {
+            let userId = currentUser.uid
+            // Remove the workout from Firestore
+            print(workout.id)
+            Firestore.firestore().collection("users/\(userId)/workoutTemplates").document(workout.id).delete { error in
+                if let error = error {
+                    print("Error deleting workout: \(error)")
+                } else {
+                    print("Workout deleted successfully")
+                }
+            }
+        }
+
+    }
+    
     func saveWorkout() {
         if let currentUser = Auth.auth().currentUser {
             let userID = currentUser.uid
@@ -84,21 +101,24 @@ struct EditTemplateView: View {
             ]
             
             if let workout = workout {
-                // Update existing workout
-                workoutData["id"] = workout.id
+                deleteWorkout(workout)
+                // Create new workout with the workout ID matching the document ID
+                let newWorkoutID = UUID().uuidString
+                workoutData["id"] = newWorkoutID
+                print("Creating new workout with ID: \(newWorkoutID)")
+                
                 db.collection("users")
                     .document(userID)
                     .collection("workoutTemplates")
-                    .document(workout.id) // Use workout ID as document ID
+                    .document(newWorkoutID) // Use the same ID for the document
                     .setData(workoutData) { error in
                         if let error = error {
-                            print("Error updating workout: \(error)")
+                            print("Error adding workout: \(error)")
                         } else {
-                            print("Existing Workout updated successfully")
+                            print("New Workout added successfully")
                         }
                     }
             } else {
-                // Create new workout with the workout ID matching the document ID
                 let newWorkoutID = UUID().uuidString
                 workoutData["id"] = newWorkoutID
                 print("Creating new workout with ID: \(newWorkoutID)")
