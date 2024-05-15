@@ -13,14 +13,12 @@ struct ExerciseView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
             
-            // Add Set button
             Button(action: {
                 exercise.sets.append(Set(reps: 0, weight: 0))
             }) {
                 Text("Add Set")
             }
             
-            // Display existing sets
             ForEach(exercise.sets.indices, id: \.self) { setIndex in
                 SetView(set: $exercise.sets[setIndex])
             }

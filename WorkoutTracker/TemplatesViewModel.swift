@@ -17,9 +17,6 @@ class TemplatesViewModel: ObservableObject {
         self.userId = userId
     }
     
-    
-//    func FetchWorkoutTemplates
-    
     func fetchWorkoutTemplates() {
         let db = Firestore.firestore()
         db.collection("users/\(userId)/workoutTemplates").order(by: "date", descending: true).addSnapshotListener { querySnapshot, error in
@@ -33,7 +30,6 @@ class TemplatesViewModel: ObservableObject {
                 return
             }
             
-            // Clear existing workout templates
             DispatchQueue.main.async {
                 self.workoutTemplates = []
                 self.workoutTemplates = documents.compactMap { document in
@@ -48,10 +44,6 @@ class TemplatesViewModel: ObservableObject {
         }
     }
 
-    
-    
-    
-    
     func deleteWorkout(_ workout: Workout) {
         Firestore.firestore().collection("users/\(userId)/workoutTemplates").document(workout.id).delete { error in
             if let error = error {
