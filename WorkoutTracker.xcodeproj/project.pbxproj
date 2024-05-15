@@ -39,6 +39,7 @@
 		ACC78F292BEF1AB80048D6F5 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = ACC78F282BEF1AB80048D6F5 /* FirebaseFirestore */; };
 		ACC78F2D2BEF1AB80048D6F5 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = ACC78F2C2BEF1AB80048D6F5 /* FirebaseFirestoreSwift */; };
 		ACC78F472BEF297B0048D6F5 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC78F462BEF297B0048D6F5 /* Extensions.swift */; };
+		ACD8B0922BF45D4300B36F02 /* EditTemplateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACD8B0912BF45D4300B36F02 /* EditTemplateViewModel.swift */; };
 		ACE0AC572BF1A65D00B2146E /* SetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE0AC562BF1A65D00B2146E /* SetView.swift */; };
 		ACE0AC592BF1A6B600B2146E /* ExerciseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE0AC582BF1A6B600B2146E /* ExerciseView.swift */; };
 /* End PBXBuildFile section */
@@ -71,6 +72,7 @@
 		ACAD9C752BEEAE19004BE40A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		ACC78F0D2BEF19280048D6F5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ACC78F462BEF297B0048D6F5 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		ACD8B0912BF45D4300B36F02 /* EditTemplateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTemplateViewModel.swift; sourceTree = "<group>"; };
 		ACE0AC562BF1A65D00B2146E /* SetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetView.swift; sourceTree = "<group>"; };
 		ACE0AC582BF1A6B600B2146E /* ExerciseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -139,6 +141,7 @@
 				AC75BC432BF010E500326765 /* EditTemplateView.swift */,
 				ACE0AC582BF1A6B600B2146E /* ExerciseView.swift */,
 				ACE0AC562BF1A65D00B2146E /* SetView.swift */,
+				ACD8B0912BF45D4300B36F02 /* EditTemplateViewModel.swift */,
 			);
 			path = WorkoutTracker;
 			sourceTree = "<group>";
@@ -245,6 +248,7 @@
 				AC328B4F2BEED6D800F88261 /* TemplateView.swift in Sources */,
 				AC328B672BEEE96600F88261 /* Set.swift in Sources */,
 				ACE0AC592BF1A6B600B2146E /* ExerciseView.swift in Sources */,
+				ACD8B0922BF45D4300B36F02 /* EditTemplateViewModel.swift in Sources */,
 				AC328B572BEEDFDF00F88261 /* ProfileViewModel.swift in Sources */,
 				ACE0AC572BF1A65D00B2146E /* SetView.swift in Sources */,
 				AC328B532BEED70B00F88261 /* ActiveWorkoutView.swift in Sources */,

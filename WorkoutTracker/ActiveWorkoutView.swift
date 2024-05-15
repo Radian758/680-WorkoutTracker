@@ -14,7 +14,6 @@ struct ActiveWorkoutView: View {
         self._viewModel = StateObject(
             wrappedValue: ActiveWorkoutViewModel(workout: workout)
         )
-        print("ActiveWorkoutView initialized")
     }
     
     var body: some View {

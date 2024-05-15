@@ -20,7 +20,6 @@ struct WorkoutHistoryView: View {
         self._viewModel = StateObject(
             wrappedValue: WorkoutHistoryViewModel(userId: userId)
         )
-        print("WorkoutHistoryView Initialized!")
     }
     
     var body: some View {

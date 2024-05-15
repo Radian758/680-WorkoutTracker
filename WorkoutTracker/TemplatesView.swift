@@ -14,10 +14,7 @@ struct TemplatesView: View {
     let userId: String
     
     init(userId: String) {
-        print("IN INIT TEMPLATESVIEW")
         self.userId = userId
-//        let firestorePath = "/users/\(userId)/workoutTemplates/"
-//        self._workoutTemplates = FirestoreQuery(collectionPath: firestorePath)
         self._viewModel = StateObject(
             wrappedValue: TemplatesViewModel(userId: userId)
         )
@@ -55,7 +52,6 @@ struct TemplatesView: View {
                         ForEach(viewModel.workoutTemplates) { workout in
                             Button {
                                 viewModel.isPresentingActiveWorkout = workout
-                                print(workout)
                             } label: {
                                 ZStack {
                                     TemplateView(workout: workout)
